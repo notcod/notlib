@@ -31,7 +31,7 @@
     "fmt.check": "prettier --check .",
     "lint": "eslint \"src/**/*.ts*\"",
     "deploy": "git add .;git commit -m 'deploy';git push ",
-    "send": "npm run deploy",
+    "send": "npm run build && npm run deploy && npm run release",
     "release": "np",
     "start": "vite --open --mode ssr",
     "test": "echo \"No test specified\" && exit 0",
