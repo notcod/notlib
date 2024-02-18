@@ -1,7 +1,8 @@
-import { $, Fragment, JSXOutput, Signal, Slot, component$, useSignal } from "@builder.io/qwik";
+import { $, Fragment, JSXOutput, Resource, ResourceReturn, Signal, Slot, component$, useSignal } from "@builder.io/qwik";
 import { nanoid } from "nanoid";
 import { twMerge } from "tailwind-merge";
 import { Form, type ActionStore } from "@builder.io/qwik-city";
+import { LuChevronLeft, LuChevronRight } from "@qwikest/icons/lucide";
 
 const QId = (id?: string) => id || nanoid();
 const QRest = (reset?: boolean, form?: ActionStore<any, any, any>) => Boolean(reset && form && form.value && form.value.statusCode && (form.value.statusCode == 200 || form.value.statusCode == 201));
@@ -181,15 +182,17 @@ export const QModal = component$((props: { signal: Signal<boolean> }) => {
     const QELEMENT = useSignal<Element>();
     const QVSIGNAL = props.signal.value;
     const QSIGNAL = props.signal;
-    const QHIDE = $(() => QSIGNAL.value = false);
-    const QHANDLER = $( (ev: PointerEvent) => {if(QELEMENT.value && ev.target && !QELEMENT.value.contains(ev.target as HTMLDivElement)) return QHIDE() })
+    const QHIDE = $(() => (QSIGNAL.value = false));
+    const QHANDLER = $((ev: PointerEvent) => {
+        if (QELEMENT.value && ev.target && !QELEMENT.value.contains(ev.target as HTMLDivElement)) return QHIDE();
+    });
     return (
         <Fragment>
             <div class={`fixed inset-0 z-50  bg-black bg-opacity-70 transition-opacity ${!QVSIGNAL && "hidden"}`} />
-            <div class={`fixed inset-0 z-50 overflow-y-auto ${!QVSIGNAL && "hidden"}`} onClick$={(QHANDLER)}>
+            <div class={`fixed inset-0 z-50 overflow-y-auto ${!QVSIGNAL && "hidden"}`} onClick$={QHANDLER}>
                 <div class="flex min-h-full items-baseline justify-center p-4 text-center sm:p-0">
                     <div class="relative transform overflow-hidden border-t-2 border-indigo-500 bg-white p-8 text-left shadow-2xl  sm:my-8 sm:w-full sm:max-w-lg" ref={QELEMENT}>
-                        <div class="absolute right-0 top-0 cursor-pointer bg-indigo-500 p-1 text-white shadow hover:text-indigo-900"  onClick$={QHIDE}>
+                        <div class="absolute right-0 top-0 cursor-pointer bg-indigo-500 p-1 text-white shadow hover:text-indigo-900" onClick$={QHIDE}>
                             <svg type="button" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
@@ -199,5 +202,104 @@ export const QModal = component$((props: { signal: Signal<boolean> }) => {
                 </div>
             </div>
         </Fragment>
+    );
+});
+
+export const QCard = component$((props: { class?: string }) => {
+    return (
+        <div class={twMerge("mb-10 w-full max-w-full bg-white p-8 shadow", props.class)}>
+            <Slot />
+        </div>
+    );
+});
+export const QPagination = component$((props: { resource: ResourceReturn<any>; page?: Signal<number> }) => {
+    return (
+        <Resource
+            value={props.resource}
+            onResolved={(e) => {
+                if (!e.pagination || (!props.page && !e?.signal) || !e.pagination.length || e.results.total <= e.results.perPage) return <></>;
+                return (
+                    <div class="flex items-center justify-between border-t border-gray-200 bg-white pt-4 select-none">
+                        <div class="flex-1 items-center justify-between sm:flex">
+                            <div class="hidden sm:block">
+                                <p class="text-sm font-medium text-gray-700">
+                                    Showing {e.results.from} to {e.results.to} of {e.results.total} results
+                                </p>
+                            </div>
+                            <div>
+                                <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+                                    {e.pagination.length &&
+                                        e.pagination.map((item: { text: string; page: number; active: boolean; disabled: boolean }) => {
+                                            const QTEXT = String(item.text);
+                                            const QPAGE = Number(item.page);
+                                            const QSIGNAL = props.page;
+                                            const QACTIVE = Boolean(item.active);
+                                            const QDISABLED = Boolean(item.disabled);
+                                            return (
+                                                <span key={`${QTEXT}-${QPAGE}-${QACTIVE}-${QDISABLED}-${Math.random()}`} onClick$={() => !QDISABLED && QSIGNAL && (QSIGNAL.value = QPAGE)} class={`relative select-none inline-flex items-center px-4 py-2 text-sm font-semibold  ${QDISABLED && "cursor-default text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0"} ${QACTIVE && "z-10 cursor-pointer bg-indigo-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"} ${!QACTIVE && !QDISABLED && "cursor-pointer text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"}`}>
+                                                    {QTEXT == "«" && <LuChevronLeft class="h-5 w-5" />}
+                                                    {QTEXT == "»" && <LuChevronRight class="h-5 w-5" />}
+                                                    {QTEXT != "«" && QTEXT != "»" && QTEXT}
+                                                </span>
+                                            );
+                                        })}
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }}
+        />
+    );
+});
+
+export const QTable = component$((props: { resource?: ResourceReturn<any>; page?: Signal<number>; header?: string[] }) => {
+    return (
+        <div class="overflow-x-auto">
+            <table class="border-ingigo-50 w-full border-collapse border text-center text-base">
+                {props.header && (
+                    <thead>
+                        <tr class="bg-indigo-500 text-white">
+                            {props.header.map((item, i) => (
+                                <th class="border-ingigo-50 border p-2" key={item + i}>
+                                    {item}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                )}
+                <tbody>
+                    {props.resource && (
+                        <Resource
+                            value={props.resource}
+                            onResolved={(e) =>
+                                (("data" in e && e.data.length === 0) || Object.keys(e).length === 0) && (
+                                    <QTableRow>
+                                        <QTableCol colSpan={props.header?.length} class="text-center">
+                                            No data found
+                                        </QTableCol>
+                                    </QTableRow>
+                                )
+                            }
+                        />
+                    )}
+                    <Slot />
+                </tbody>
+            </table>
+        </div>
+    );
+});
+
+export const QTableRow = component$(() => (
+    <tr>
+        <Slot />
+    </tr>
+));
+
+export const QTableCol = component$((props: { class?: string; colSpan?: number }) => {
+    return (
+        <td class={twMerge(["border-ingigo-50 border p-2", props.class])} colSpan={props.colSpan}>
+            <Slot />
+        </td>
     );
 });
