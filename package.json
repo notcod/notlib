@@ -49,5 +49,9 @@
     "undici": "*",
     "vite": "^5.0.12",
     "vite-tsconfig-paths": "^4.2.1"
+  },
+  "dependencies": {
+    "@builder.io/qwik-city": "^1.4.5",
+    "tailwind-merge": "^2.2.1"
   }
 }

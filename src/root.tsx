@@ -1,17 +1,16 @@
-import { Counter } from "./components/counter/counter";
-import { Logo } from "./components/logo/logo";
+import { Input } from "./components/qhtml/qhtml";
 
 export default () => {
-  return (
-    <>
-      <head>
-        <meta charSet="utf-8" />
-        <title>Qwik Blank App</title>
-      </head>
-      <body>
-        <Logo />
-        <Counter />
-      </body>
-    </>
-  );
+    return (
+        <>
+            <head>
+                <meta charSet="utf-8" />
+                <title>Qwik Blank App</title>
+                <script src="https://cdn.tailwindcss.com"></script>
+            </head>
+            <body>
+                <Input label="Hello World!" />
+            </body>
+        </>
+    );
 };
