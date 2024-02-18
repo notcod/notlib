@@ -4,9 +4,9 @@ import { twMerge } from "tailwind-merge";
 import { Form, type ActionStore } from "@builder.io/qwik-city";
 
 const QId = (id?: string) => id || nanoid();
-const QRest = (reset?: boolean, form?: ActionStore<any, any, any>) => Boolean(reset && (form?.value?.statusCode == 200 || form?.value?.statusCode == 201));
-const QError = (error?: string | string[] | undefined | null, form?: ActionStore<any, any, any>, name?: string) => String(error || form?.value?.fieldErrors[name || ""] || "");
-const QValue = (value?: string | number, form?: ActionStore<any, any, any>, name?: string) => String(value || form?.formData?.get(name || "") || "");
+const QRest = (reset?: boolean, form?: ActionStore<any, any, any>) => Boolean(reset && form && form.value && form.value.statusCode && (form.value.statusCode == 200 || form.value.statusCode == 201));
+const QError = (error?: string | string[] | undefined | null, form?: ActionStore<any, any, any>, name?: string) => String(error || (form && form.value && form.value.fieldErrors && form.value.fieldErrors[name || ""]) || "");
+const QValue = (value?: string | number, form?: ActionStore<any, any, any>, name?: string) => String(value || (form && form.formData && form.formData.get(name || "")) || "");
 
 export const QInput = component$((props: { label: string; id?: string; name?: string; type?: string; class?: string; value?: string | number; error?: string; pattern?: string; readOnly?: boolean; autoComplete?: string; form?: ActionStore<any, any, any>; onInput$?: (ev: Event, el: HTMLInputElement) => void; onChange$?: (event: Event, element: HTMLInputElement) => any; disabled?: boolean; reset?: boolean }) => {
     const QID = QId(props.id);
@@ -115,7 +115,7 @@ export const QSpinner = component$((props: { class?: string }) => {
     );
 });
 
-export const QForm = component$((props: { action: ActionStore<any, any, any>; class?: string }) => {
+export const QForm = component$((props: { action?: ActionStore<any, any, any>; class?: string }) => {
     const QRUNNING = !!(props.action && props.action.isRunning);
     return (
         <Form action={props.action} class={twMerge([`${QRUNNING && "pointer-events-none cursor-progress opacity-75"} mx-auto w-[600px] max-w-full bg-white p-8 shadow`, props.class])}>
@@ -181,16 +181,16 @@ export const QModal = component$((props: { signal: Signal<boolean> }) => {
     const QELEMENT = useSignal<Element>();
     const QVSIGNAL = props.signal.value;
     const QSIGNAL = props.signal;
-    const QHANDLER = $(async (ev: PointerEvent) => QELEMENT.value && ev.target && !QELEMENT.value.contains(ev.target as HTMLDivElement) && (await QHIDE()));
-    const QHIDE = $(() => (QSIGNAL.value = false));
+    const QHIDE = $(() => QSIGNAL.value = false);
+    const QHANDLER = $( (ev: PointerEvent) => {if(QELEMENT.value && ev.target && !QELEMENT.value.contains(ev.target as HTMLDivElement)) return QHIDE() })
     return (
         <Fragment>
-            <div class={`fixed inset-0 z-50  bg-black bg-opacity-70 transition-opacity ${QVSIGNAL && "hidden"}`} />
-            <div class={`fixed inset-0 z-50 overflow-y-auto ${QVSIGNAL && "hidden"}`} onClick$={QHANDLER}>
+            <div class={`fixed inset-0 z-50  bg-black bg-opacity-70 transition-opacity ${!QVSIGNAL && "hidden"}`} />
+            <div class={`fixed inset-0 z-50 overflow-y-auto ${!QVSIGNAL && "hidden"}`} onClick$={(QHANDLER)}>
                 <div class="flex min-h-full items-baseline justify-center p-4 text-center sm:p-0">
                     <div class="relative transform overflow-hidden border-t-2 border-indigo-500 bg-white p-8 text-left shadow-2xl  sm:my-8 sm:w-full sm:max-w-lg" ref={QELEMENT}>
-                        <div class="absolute right-0 top-0 cursor-pointer bg-indigo-500 p-1 text-white shadow hover:text-indigo-900">
-                            <svg type="button" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" onClick$={QHIDE} class="h-5 w-5">
+                        <div class="absolute right-0 top-0 cursor-pointer bg-indigo-500 p-1 text-white shadow hover:text-indigo-900"  onClick$={QHIDE}>
+                            <svg type="button" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </div>
