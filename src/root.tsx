@@ -1,4 +1,4 @@
-import { Input } from "./components/qhtml/qhtml";
+import { QInput } from "./components/qhtml/qhtml";
 
 export default () => {
     return (
@@ -9,7 +9,7 @@ export default () => {
                 <script src="https://cdn.tailwindcss.com"></script>
             </head>
             <body>
-                <Input label="Hello World!" />
+                <QInput label="Hello World!" />
             </body>
         </>
     );

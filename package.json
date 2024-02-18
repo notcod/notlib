@@ -2,13 +2,13 @@
   "name": "not-qwik-library-test",
   "version": "0.1.0",
   "description": "Create a component library",
-  "main": "./lib/index.qwik.mjs",
-  "qwik": "./lib/index.qwik.mjs",
+  "main": "./lib/index.mjs",
+  "qwik": "./lib/index.mjs",
   "types": "./lib-types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/index.qwik.mjs",
-      "require": "./lib/index.qwik.cjs",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.cjs",
       "types": "./lib-types/index.d.ts"
     }
   },

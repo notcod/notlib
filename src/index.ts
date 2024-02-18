@@ -1,1 +1,1 @@
-export { Input } from "./components/qhtml/qhtml";
+export { QInput, QButton, QSelect, QForm, QHiddenInput, QInputSm, QSpinner } from "./components/qhtml/qhtml";
