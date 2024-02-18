@@ -1,4 +1,4 @@
-import { JSXOutput, Slot, component$ } from "@builder.io/qwik";
+import { $, Fragment, JSXOutput, Signal, Slot, component$, useSignal } from "@builder.io/qwik";
 import { nanoid } from "nanoid";
 import { twMerge } from "tailwind-merge";
 import { Form, type ActionStore } from "@builder.io/qwik-city";
@@ -174,5 +174,31 @@ export const QTextarea = component$((props: { label: string; class?: string; id?
             </div>
             {!!QERROR && <div class="text-sm font-medium text-red-600">{QERROR}</div>}
         </div>
+    );
+});
+
+export const QModal = component$((props: { signal: Signal<boolean> }) => {
+    const QELEMENT = useSignal<Element>();
+    const QVSIGNAL = props.signal.value;
+    const QSIGNAL = props.signal;
+    const QHANDLER = $((ev: PointerEvent) => {
+        if (QELEMENT.value && ev.target && !QELEMENT.value.contains(ev.target as HTMLDivElement)) QSIGNAL.value = !QSIGNAL.value;
+    });
+    return (
+        <Fragment>
+            <div class={`fixed inset-0 z-50  bg-black bg-opacity-70 transition-opacity ${QVSIGNAL && "hidden"}`} />
+            <div class={`fixed inset-0 z-50 overflow-y-auto ${QVSIGNAL && "hidden"}`} onClick$={QHANDLER}>
+                <div class="flex min-h-full items-baseline justify-center p-4 text-center sm:p-0">
+                    <div class="relative transform overflow-hidden border-t-2 border-indigo-500 bg-white p-8 text-left shadow-2xl  sm:my-8 sm:w-full sm:max-w-lg" ref={QELEMENT}>
+                        <div class="absolute right-0 top-0 cursor-pointer bg-indigo-500 p-1 text-white shadow hover:text-indigo-900">
+                            <svg type="button" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" onClick$={() => (QSIGNAL.value = false)} class="h-5 w-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </div>
+                        <Slot />
+                    </div>
+                </div>
+            </div>
+        </Fragment>
     );
 });

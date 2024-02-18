@@ -30,6 +30,7 @@
     "fmt": "prettier --write .",
     "fmt.check": "prettier --check .",
     "lint": "eslint \"src/**/*.ts*\"",
+    "deploy": "git add .;git commit -m 'deploy';git push ",
     "release": "np",
     "start": "vite --open --mode ssr",
     "test": "echo \"No test specified\" && exit 0",
@@ -52,6 +53,7 @@
   },
   "dependencies": {
     "@builder.io/qwik-city": "^1.4.5",
+    "@qwikest/icons": "^0.0.13",
     "tailwind-merge": "^2.2.1"
   }
 }
