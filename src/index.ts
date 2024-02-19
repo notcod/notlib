@@ -167,3 +167,13 @@ export async function _qdget(url: string, data: QData, request?: QRequestInit): 
         signal: { value: res?.results?.page || 1 },
     };
 }
+
+
+export const sget = _qget;
+export const spost = _qpost;
+export const sput = _qput;
+export const sdelete = _qdelete;
+export const spatch = _qpatch;
+export const smget = _qmget;
+export const ssget = _qsget;
+export const sdget = _qdget;
