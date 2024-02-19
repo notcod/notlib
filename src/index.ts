@@ -1,7 +1,6 @@
 import { Cookie, RequestEventAction, RequestEvent, RequestEventBase, server$ } from "@builder.io/qwik-city";
 
-export { QInput, QButton, QSelect, QForm, QHiddenInput, QInputSm, QSpinner } from "./components/qhtml/qhtml";
-
+export { QInput, QButton, QSelect, QForm, QHiddenInput, QInputSm, QSpinner, QContainer, QModal, QPagination, QTable, QTableCol, QTableRow, QTextarea } from "./components/qhtml/qhtml";
 
 export type QRequestInit = {
     method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
