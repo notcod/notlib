@@ -36,9 +36,7 @@
     "test": "echo \"No test specified\" && exit 0",
     "qwik": "qwik"
   },
-  "peerDependencies": {
-    "@builder.io/qwik": "1.4.5",
-    "@builder.io/qwik-city": "^1.4.5",
+  "devDependencies": {
     "@types/eslint": "^8.56.2",
     "@types/node": "^20.11.6",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
@@ -54,6 +52,8 @@
     "vite-tsconfig-paths": "^4.2.1"
   },
   "dependencies": {
+    "@builder.io/qwik": "1.4.5",
+    "@builder.io/qwik-city": "^1.4.5",
     "@qwikest/icons": "^0.0.13",
     "tailwind-merge": "^2.2.1"
   }
