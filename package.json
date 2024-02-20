@@ -1,6 +1,6 @@
 {
   "name": "not-qwik-library-test1",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Create a component library",
   "main": "./lib/index.mjs",
   "qwik": "./lib/index.mjs",
