@@ -8,23 +8,19 @@ const makeRegex = (dep) => new RegExp(`^${dep}(/.*)?$`);
 const excludeAll = (obj) => Object.keys(obj).map(makeRegex);
 
 export default defineConfig(() => {
-  return {
-    build: {
-      target: "es2020",
-      lib: {
-        entry: "./src/index.ts",
-        formats: ["es", "cjs"],
-        fileName: (format) => `index.${format === "es" ? "mjs" : "cjs"}`,
-      },
-      rollupOptions: {
-        // externalize deps that shouldn't be bundled into the library
-        external: [
-          /^node:.*/,
-          ...excludeAll(dependencies),
-          ...excludeAll(peerDependencies),
-        ],
-      },
-    },
-    plugins: [qwikVite(), tsconfigPaths()],
-  };
+    return {
+        build: {
+            target: "es2020",
+            lib: {
+                entry: "./src/index.ts",
+                formats: ["es", "cjs"],
+                fileName: (format) => `index.${format === "es" ? "mjs" : "cjs"}`,
+            },
+            rollupOptions: {
+                // externalize deps that shouldn't be bundled into the library
+                external: [/^node:.*/, ...excludeAll(dependencies), ...excludeAll(peerDependencies)],
+            },
+        },
+        plugins: [qwikVite(), tsconfigPaths()],
+    };
 });

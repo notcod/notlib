@@ -4,17 +4,16 @@
   "description": "Create a component library",
   "main": "./lib/index.mjs",
   "qwik": "./lib/index.mjs",
-  "types": "./lib-types/index.d.ts",
+  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
       "import": "./lib/index.mjs",
       "require": "./lib/index.cjs",
-      "types": "./lib-types/index.d.ts"
+      "types": "./lib/index.d.ts"
     }
   },
   "files": [
-    "lib",
-    "lib-types"
+    "lib"
   ],
   "engines": {
     "node": ">=15.0.0"
@@ -24,7 +23,7 @@
   "scripts": {
     "build": "qwik build",
     "build.lib": "vite build --mode lib",
-    "build.types": "tsc --emitDeclarationOnly",
+    "build.types": "tsc --emitDeclarationOnly; rollup -c",
     "dev": "vite --mode ssr",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "fmt": "prettier --write .",
@@ -55,6 +54,7 @@
   },
   "dependencies": {
     "@qwikest/icons": "^0.0.13",
+    "rollup-plugin-dts": "^6.1.0",
     "tailwind-merge": "^2.2.1"
   }
 }
